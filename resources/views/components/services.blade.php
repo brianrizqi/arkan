@@ -1,4 +1,4 @@
-<section id="services" class="relative min-h-screen overflow-hidden" style="position: sticky; top: 0; z-index: 3;">
+<section id="services" class="relative min-h-screen overflow-hidden" style="top: 0; z-index: 3;">
     <!-- Background Image -->
     <div class="absolute inset-0">
         <img src="{{ asset('assets/img/bg-our-service.png') }}" 
