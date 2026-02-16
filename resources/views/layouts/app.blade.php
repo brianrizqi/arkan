@@ -17,6 +17,7 @@
 
     </head>
     <body class="antialiased font-montserrat">
+        <x-navbar />
         @yield('content')
     </body>
 </html>

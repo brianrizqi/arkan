@@ -30,3 +30,34 @@ gsap.ticker.lagSmoothing(0);
 
 // Expose lenis instance
 window.lenis = lenis;
+
+// Navbar Dynamic Behavior
+const navbar = document.getElementById('global-navbar');
+
+if (navbar) {
+    // Scroll threshold for background visibility
+    ScrollTrigger.create({
+        start: 'top -50',
+        onEnter: () => navbar.classList.add('nav-scrolled'),
+        onLeaveBack: () => navbar.classList.remove('nav-scrolled'),
+    });
+
+    // Handle color switching based on sections (Light/Dark detection)
+    // About section is bg-[#F5F1E8] (light), so navbar should be dark
+    const lightSections = ['#about', '#services', '#industries', '#ose'];
+
+    lightSections.forEach(selector => {
+        const section = document.querySelector(selector);
+        if (section) {
+            ScrollTrigger.create({
+                trigger: section,
+                start: 'top 80px', // When section is 80px from top (approx navbar height)
+                end: 'bottom 80px',
+                onEnter: () => navbar.classList.add('nav-dark'),
+                onEnterBack: () => navbar.classList.add('nav-dark'),
+                onLeave: () => navbar.classList.remove('nav-dark'),
+                onLeaveBack: () => navbar.classList.remove('nav-dark'),
+            });
+        }
+    });
+}

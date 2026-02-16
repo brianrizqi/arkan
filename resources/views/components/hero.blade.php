@@ -3,22 +3,7 @@
     <div class="absolute inset-0 bg-gradient-to-b from-[#0A2647] via-[#144272] to-[#205295] opacity-90"></div>
     <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_rgba(10,25,47,0.5)_100%)]"></div>
 
-    <!-- Navigation Header -->
-    <header class="relative z-10 w-full px-8 py-8 flex justify-between items-center text-white/90">
-        <div class="nav-item opacity-0">
-            <a href="#" class="text-sm tracking-[0.3em] font-cinzel hover:text-white transition-colors">ARKAN</a>
-        </div>
-        <nav class="absolute left-1/2 -translate-x-1/2 space-x-8 text-xs tracking-[0.2em] font-montserrat uppercase hidden md:flex">
-            <a href="#" class="nav-item opacity-0 hover:text-white transition-colors">About</a>
-            <a href="#" class="nav-item opacity-0 hover:text-white transition-colors">Work</a>
-            <a href="#" class="nav-item opacity-0 hover:text-white transition-colors">Archive</a>
-        </nav>
-        <div class="nav-item opacity-0">
-            <a href="#" class="group text-sm tracking-widest font-montserrat flex items-center hover:text-white transition-colors">
-                Contact <span class="ml-2 group-hover:translate-x-1 transition-transform">→</span>
-            </a>
-        </div>
-    </header>
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_rgba(10,25,47,0.5)_100%)]"></div>
 
     <!-- Main Content -->
     <main class="relative z-10 flex-grow flex flex-col items-center justify-center text-center px-4">
