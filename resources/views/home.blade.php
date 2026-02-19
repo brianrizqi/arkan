@@ -6,6 +6,8 @@
         <x-about />
         <x-services />
         <x-industries />
+        <x-process />
+        <x-journal />
         <x-ose />
     </div>
 @endsection

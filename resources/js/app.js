@@ -61,3 +61,62 @@ if (navbar) {
         }
     });
 }
+
+// Loader Animation
+const loader = document.getElementById('loader');
+const loaderLogo = document.getElementById('loader-logo');
+
+if (loader && loaderLogo) {
+    // Premium Pulse Animation
+    gsap.to(loaderLogo, {
+        scale: 1.05,
+        filter: "brightness(1.2)",
+        duration: 2,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut"
+    });
+
+    // Handle Page Load
+    window.addEventListener('load', () => {
+        const tl = gsap.timeline();
+
+        // Target the hero section for a smooth reveal
+        const heroSection = document.getElementById('hero-section');
+        if (heroSection) {
+            gsap.set(heroSection, { scale: 1.1, opacity: 0 });
+        }
+
+        tl.to(loaderLogo, {
+            opacity: 0,
+            scale: 0.9,
+            duration: 0.8,
+            delay: 0.5,
+            ease: "power2.inOut",
+            onStart: () => {
+                // Pre-warm the hero section visibility
+                if (heroSection) {
+                    gsap.to(heroSection, { opacity: 1, duration: 1.2, ease: "power2.inOut" });
+                }
+            }
+        })
+            .to(loader, {
+                opacity: 0,
+                duration: 1.2,
+                ease: "power2.out",
+                onStart: () => {
+                    // Trigger Hero content entrance synchronized with loader fade
+                    if (window.initHeroEntrance) {
+                        window.initHeroEntrance();
+                    }
+                    if (heroSection) {
+                        gsap.to(heroSection, { scale: 1, duration: 2.5, ease: "power2.out" });
+                    }
+                },
+                onComplete: () => {
+                    loader.style.display = 'none';
+                    ScrollTrigger.refresh();
+                }
+            });
+    });
+}

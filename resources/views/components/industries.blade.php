@@ -1,121 +1,105 @@
-@php
-    $industries = [
-        [
-            'number' => '01',
-            'title' => 'Luxury Hotels & Resorts',
-            'image' => asset('assets/img/industries/luxury_hotel.png'),
-        ],
-        [
-            'number' => '02',
-            'title' => 'Aviation & Premium Travels',
-            'image' => asset('assets/img/industries/aviation_travel.png'),
-        ],
-        [
-            'number' => '03',
-            'title' => 'Private Healthcare & Wellness',
-            'image' => asset('assets/img/industries/private_healthcare.png'),
-        ],
-        [
-            'number' => '04',
-            'title' => 'Yacht & Marine Hospitality',
-            'image' => asset('assets/img/industries/yacht_hospitality.png'),
-        ],
-        [
-            'number' => '05',
-            'title' => 'Branded Residence & Real Estate',
-            'image' => asset('assets/img/industries/branded_residence.png'),
-        ],
-        [
-            'number' => '06',
-            'title' => 'Luxury Retail & Experience Spaces',
-            'image' => asset('assets/img/industries/luxury_retail.png'),
-        ],
-    ];
-@endphp
-
-<section id="industries" class="relative py-24 px-12 min-h-screen" style="position: relative; z-index: 4;">
-    <!-- Background Image -->
-    <div class="absolute inset-0">
-        <img src="{{ asset('assets/img/bg-texture.png') }}" 
-             alt="" 
-             class="w-full h-full object-cover opacity-30">
-    </div>
-
-    <div class="max-w-[1920px] mx-auto relative z-10">
-        <!-- Title -->
-        <div class="mb-16">
-            <h2 class="industries-title font-radley text-[50px] leading-[92%] tracking-[-0.05em] text-[#1A1A1A]">
-                <span class="italic">The</span> Industries We<br>Serve
-            </h2>
-        </div>
-
-        <!-- Grid Container -->
-        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            @foreach($industries as $industry)
-                <div class="industry-tile flex flex-col group opacity-0 translate-y-8">
-                    <!-- Image Wrapper -->
-                    <div class="aspect-[2/3] overflow-hidden mb-6 bg-gray-200">
-                        <img src="{{ $industry['image'] ?? $industry['placeholder'] }}" 
-                             alt="{{ $industry['title'] }}" 
-                             class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 ease-in-out scale-100 group-hover:scale-110">
-                    </div>
-
-                    <!-- Info -->
-                    <div class="flex items-start gap-3">
-                        <div class="flex-shrink-0 w-8 h-8 rounded-full border border-[#1A1A1A] flex items-center justify-center text-[12px] font-archivo">
-                            {{ $industry['number'] }}
-                        </div>
-                        <h3 class="text-[16px] leading-tight font-archivo text-[#1A1A1A]">
-                            {{ $industry['title'] }}
-                        </h3>
-                    </div>
-                </div>
-            @endforeach
-        </div>
-
-        <!-- "And Others" -->
-        <div class="mt-16 flex justify-end">
-            <div class="text-right">
-                <p class="italic text-[16px] text-[#1A1A1A] font-radley opacity-60">and</p>
-                <p class="text-[16px] text-[#1A1A1A] font-radley opacity-60">others</p>
+<section id="industries" class="relative py-12 md:py-24 px-6 md:px-12 bg-[#F5F1E8]" style="z-index: 4;">
+    <div class="max-w-[1920px] mx-auto">
+        <!-- Main Card Container -->
+        <div class="industries-container opacity-0 relative overflow-hidden rounded-[2rem] md:rounded-[3rem] aspect-[4/3] md:aspect-[21/9] lg:aspect-[21/9] flex items-center justify-center group">
+            
+            <!-- Background Image -->
+            <div class="absolute inset-0 z-0">
+                <img src="{{ asset('assets/img/bg-industries.png') }}" 
+                     alt="Industries We Serve" 
+                     class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105">
+                <!-- Overlay for Text Contrast -->
+                <div class="absolute inset-0 bg-black/30 bg-gradient-to-t from-black/40 to-transparent"></div>
             </div>
+
+            <!-- Content -->
+            <div class="relative z-10 w-full px-6 flex flex-col items-center">
+                <div class="text-center mb-8 md:mb-12">
+                    <p class="industries-label opacity-0 text-[10px] md:text-sm lg:text-base font-lato text-white/80 tracking-[0.2em] uppercase mb-4">
+                        Industries We Serve
+                    </p>
+                    <h2 class="industries-main-title opacity-0 text-3xl md:text-5xl lg:text-7xl font-radley text-white leading-tight">
+                        Luxury Hospitality & Beyond
+                    </h2>
+                </div>
+
+                <!-- Numbered List (Horizontal on Desktop, Grid on Mobile) -->
+                <div class="industries-list opacity-0 flex flex-wrap justify-center gap-x-8 gap-y-4 md:gap-x-12 max-w-4xl">
+                    @php
+                        $industries = [
+                            "Hotels & Resorts",
+                            "Private Estates",
+                            "Yachts & Aviation",
+                            "Fine Dining",
+                            "Wellness & Spa",
+                            "Corporate Spaces"
+                        ];
+                    @endphp
+                    @foreach($industries as $index => $industry)
+                        <div class="flex items-center space-x-2 md:space-x-3">
+                            <span class="text-[9px] md:text-xs font-lato text-white/40 tabular-nums">
+                                {{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}
+                            </span>
+                            <span class="text-xs md:text-sm lg:text-base font-inter text-white tracking-widest uppercase">
+                                {{ $industry }}
+                            </span>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+
+            <!-- Slider Arrow (Right) -->
+            <button class="industries-arrow opacity-0 absolute right-8 top-1/2 -translate-y-1/2 w-12 h-12 md:w-16 md:h-16 rounded-full border border-white/30 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all duration-300 group/arrow">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 md:w-8 md:h-8 transition-transform group-hover/arrow:translate-x-1">
+                    <path d="M5 12h14m-7-7 7 7-7 7"/>
+                </svg>
+            </button>
         </div>
     </div>
 </section>
 
-<style>
-    @font-face {
-        font-family: 'Radley';
-        src: url('https://fonts.googleapis.com/css2?family=Radley:ital@0;1&display=swap');
-    }
-    @font-face {
-        font-family: 'Archivo';
-        src: url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500&display=swap');
-    }
-</style>
-
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    if (typeof gsap !== 'undefined') {
-        const tl = gsap.timeline({
-            scrollTrigger: {
-                trigger: '#industries',
-                start: 'top 70%',
-                toggleActions: 'play none none none'
-            }
-        });
+    gsap.registerPlugin(ScrollTrigger);
 
-        tl.fromTo('.industries-title', 
-            { y: 50, opacity: 0 },
-            { y: 0, opacity: 1, duration: 1.2, ease: 'power4.out' }
-        )
-        .to('.industry-tile', {
-            opacity: 1,
-            y: 0,
-            duration: 1,
-            stagger: 0.15,
-            ease: 'power3.out'
-        }, '-=0.8');
-    }
+    const industriesTl = gsap.timeline({
+        scrollTrigger: {
+            trigger: '#industries',
+            start: 'top 70%',
+            toggleActions: 'play none none none'
+        }
+    });
+
+    // Reveal main container
+    industriesTl.to('.industries-container', {
+        opacity: 1,
+        y: 0,
+        startAt: { y: 40 },
+        duration: 1.5,
+        ease: 'power4.out'
+    })
+    
+    // Reveal text elements
+    .to('.industries-label', {
+        opacity: 1,
+        y: 0,
+        startAt: { y: 20 },
+        duration: 1,
+        ease: 'power3.out'
+    }, '-=0.8')
+    .to('.industries-main-title', {
+        opacity: 1,
+        y: 0,
+        startAt: { y: 30 },
+        duration: 1.2,
+        ease: 'power3.out'
+    }, '-=0.8')
+    .to('.industries-list', {
+        opacity: 1,
+        y: 0,
+        startAt: { y: 20 },
+        duration: 1,
+        ease: 'power3.out'
+    }, '-=0.8');
 });
 </script>

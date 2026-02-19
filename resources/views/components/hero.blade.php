@@ -1,15 +1,16 @@
-<section id="hero-section" class="section-panel relative min-h-screen flex flex-col justify-between overflow-hidden bg-[#0A192F]" style="z-index: 1;">
-    <!-- Premium Gradient Background -->
-    <div class="absolute inset-0 bg-gradient-to-b from-[#0A2647] via-[#144272] to-[#205295] opacity-90"></div>
-    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_rgba(10,25,47,0.5)_100%)]"></div>
-
-    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_rgba(10,25,47,0.5)_100%)]"></div>
+<section id="hero-section" class="section-panel relative min-h-screen flex flex-col justify-between overflow-hidden bg-black" style="z-index: 1;">
+    <!-- Background Image -->
+    <div class="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-100" 
+         style="background-image: url('{{ asset('assets/img/hero-section.png') }}');">
+    </div>
+    <!-- Subtle Overlay for contrast -->
+    <div class="absolute inset-0 bg-black/30"></div>
 
     <!-- Main Content -->
     <main class="relative z-10 flex-grow flex flex-col items-center justify-center text-center px-4">
         <div class="hero-content">
             <div class="logo-text opacity-0 scale-95">
-                <img src="{{ asset('assets/img/heading.png') }}" alt="Arkan Logo" class="w-full max-w-4xl mx-auto h-auto">
+                <img src="{{ asset('assets/img/logo-arkan.svg') }}" alt="Arkan Logo" class="w-full max-w-2xl mx-auto h-auto">
             </div>
             <p class="tagline opacity-0 mt-8 text-sm md:text-lg font-inter tracking-[0.6em] text-white/70 uppercase">
                 Crafting the standard of refined hospitality
@@ -20,14 +21,29 @@
     <!-- Footer / Scroll Indicator -->
     <footer class="relative z-10 w-full pb-12 flex flex-col items-center text-white/60">
         <div class="scroll-indicator opacity-0 flex flex-col items-center cursor-pointer group">
-            <span class="text-xs italic font-cinzel tracking-widest mb-2 group-hover:text-white transition-colors">Our Services</span>
-            <div class="w-px h-8 bg-white/30 group-hover:bg-white/60 transition-colors animate-bounce"></div>
+            <div class="mouse-icon w-[22px] h-[36px] border border-white/40 rounded-full relative mb-3 p-1">
+                <div class="mouse-dot w-1.5 h-1.5 bg-white rounded-full absolute left-1/2 -translate-x-1/2"></div>
+            </div>
+            <span class="text-[10px] md:text-xs font-radley tracking-[0.2em] uppercase group-hover:text-white transition-colors">Scroll for more</span>
         </div>
     </footer>
 </section>
 
+<style>
+    .mouse-dot {
+        animation: mouseScroll 2s infinite ease-in-out;
+    }
+
+    @keyframes mouseScroll {
+        0% { transform: translate(-50%, 0); opacity: 0; }
+        20% { opacity: 1; }
+        60% { transform: translate(-50%, 15px); opacity: 0; }
+        100% { opacity: 0; }
+    }
+</style>
+
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
+    window.initHeroEntrance = () => {
         gsap.registerPlugin(ScrollTrigger);
 
         // === Entrance Animation ===
@@ -45,19 +61,19 @@
             y: 0,
             startAt: { y: 20 },
             duration: 1.2
-        }, '-=1')
+        }, '-=1.2')
         .to('.nav-item', {
             opacity: 1,
             y: 0,
             startAt: { y: -20 },
             stagger: 0.1,
             duration: 1
-        }, '-=0.8')
+        }, '-=1')
         .to('.scroll-indicator', {
             opacity: 1,
             y: 0,
             startAt: { y: 20 },
             duration: 1
-        }, '-=0.5');
-    });
+        }, '-=0.8');
+    };
 </script>

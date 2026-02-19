@@ -10,8 +10,10 @@
     --font-cinzel: 'Cinzel', serif;
     --font-serif-luxury: 'DM Serif Display', serif;
     --font-inter: 'Inter', sans-serif;
+    --font-lato: 'Lato', sans-serif;
     --font-radley: 'Radley', serif;
     --font-helvetica: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Helvetica', sans-serif;
+    --font-sans: var(--font-lato);
 }
 
 /* Lenis Recommended CSS */
@@ -37,15 +39,17 @@ html.lenis body {
 }
 
 /* Stacking scroll sections — each panel sticks and gets overlaid by the next */
-.section-panel {
-    position: sticky;
-    top: 0;
-    will-change: transform;
-}
+@media (min-width: 768px) {
+    .section-panel {
+        position: sticky;
+        top: 0;
+        will-change: transform;
+    }
 
-/* Shadow on the top edge for depth when sections overlap */
-.section-panel+.section-panel {
-    box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.15);
+    /* Shadow on the top edge for depth when sections overlap */
+    .section-panel+.section-panel {
+        box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.15);
+    }
 }
 
 .service-item p {
