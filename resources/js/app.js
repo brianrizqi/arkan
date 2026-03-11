@@ -2,18 +2,20 @@ import './bootstrap';
 import Lenis from 'lenis'
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 
 // Expose GSAP to window for inline scripts
 window.gsap = gsap;
 window.ScrollTrigger = ScrollTrigger;
+window.ScrollToPlugin = ScrollToPlugin;
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 // Initialize Lenis with smooth settings similar to refined framing
 const lenis = new Lenis({
-    lerp: 0.1, // Smoothness intensity (0-1). Lower is smoother/slower. Default is 0.1.
-    wheelMultiplier: 1, // Mouse wheel speed.
-    touchMultiplier: 2, // Touch output speed.
+    lerp: 0.05, // Slightly slower lerp for creamier smoothness
+    wheelMultiplier: 0.8, // More dampened for precision
+    touchMultiplier: 1.2, // Natural touch responsiveness
     infinite: false,
 });
 
@@ -31,6 +33,53 @@ gsap.ticker.lagSmoothing(0);
 // Expose lenis instance
 window.lenis = lenis;
 
+// Handle smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = this.getAttribute('href');
+        if (target === '#') return;
+
+        // Close mobile menu if open (toggled via global window.toggleMenu)
+        const navbar = document.getElementById('global-navbar');
+        if (navbar && navbar.classList.contains('menu-open') && typeof window.toggleMenu === 'function') {
+            window.toggleMenu();
+        }
+
+        // Logic for #services label-aware scroll
+        if (target === '#services' && window.servicesTl) {
+            const st = window.servicesTl.scrollTrigger;
+            if (st) {
+                // Landing at 0.6 allows the final reveal animation to settle 
+                // while the scroll finishes, creating a much smoother "glide" effect.
+                const targetProgress = 0.6;
+                const scrollPos = st.start + (targetProgress * (st.end - st.start));
+
+                lenis.scrollTo(scrollPos, {
+                    duration: 3.2, // Significantly slower for an ultra-premium "glide"
+                    easing: (t) => t === 1 ? 1 : 1 - Math.pow(2, -10 * t), // Pure exponential out
+                    onComplete: () => {
+                        setTimeout(() => ScrollTrigger.refresh(), 100);
+                    }
+                });
+                return;
+            }
+        }
+
+        lenis.scrollTo(target, {
+            offset: 0,
+            duration: 2.5, // Increased from 1.5 to 2.5 for "very very smooth" feel
+            easing: (t) => t === 1 ? 1 : 1 - Math.pow(2, -10 * t),
+            onComplete: () => {
+                // Force ScrollTrigger to recalculate positions after jump
+                setTimeout(() => {
+                    ScrollTrigger.refresh();
+                }, 100);
+            }
+        });
+    });
+});
+
 // Navbar Dynamic Behavior
 const navbar = document.getElementById('global-navbar');
 
@@ -43,8 +92,7 @@ if (navbar) {
     });
 
     // Handle color switching based on sections (Light/Dark detection)
-    // About section is bg-[#F5F1E8] (light), so navbar should be dark
-    const lightSections = ['#about', '#services', '#industries', '#ose'];
+    const lightSections = ['#about', '#services', '#industries'];
 
     lightSections.forEach(selector => {
         const section = document.querySelector(selector);
@@ -60,6 +108,43 @@ if (navbar) {
             });
         }
     });
+
+    // Service Interactive Image Logic
+    const serviceItems = document.querySelectorAll('.service-item');
+    const serviceImage = document.getElementById('service-display-image');
+
+    if (serviceItems.length > 0 && serviceImage) {
+        serviceItems.forEach((item, index) => {
+            // Set first item as active by default
+            if (index === 0) item.classList.add('active-service');
+
+            item.addEventListener('mouseenter', () => {
+                const newSrc = item.getAttribute('data-service-image');
+                if (!newSrc || serviceImage.src === newSrc) return;
+
+                // Update active state
+                serviceItems.forEach(si => si.classList.remove('active-service'));
+                item.classList.add('active-service');
+
+                // GSAP Transition for image
+                gsap.to(serviceImage, {
+                    opacity: 0,
+                    scale: 1.05,
+                    duration: 0.4,
+                    ease: "power2.in",
+                    onComplete: () => {
+                        serviceImage.src = newSrc;
+                        gsap.to(serviceImage, {
+                            opacity: 1,
+                            scale: 1,
+                            duration: 0.6,
+                            ease: "power2.out"
+                        });
+                    }
+                });
+            });
+        });
+    }
 }
 
 // Loader Animation
@@ -67,7 +152,7 @@ const loader = document.getElementById('loader');
 const loaderLogo = document.getElementById('loader-logo');
 
 if (loader && loaderLogo) {
-    // Premium Pulse Animation
+    // Pulse animation
     gsap.to(loaderLogo, {
         scale: 1.05,
         filter: "brightness(1.2)",
@@ -77,46 +162,151 @@ if (loader && loaderLogo) {
         ease: "sine.inOut"
     });
 
-    // Handle Page Load
+    // Handle Page Load transition
     window.addEventListener('load', () => {
         const tl = gsap.timeline();
 
         // Target the hero section for a smooth reveal
         const heroSection = document.getElementById('hero-section');
-        if (heroSection) {
-            gsap.set(heroSection, { scale: 1.1, opacity: 0 });
-        }
 
         tl.to(loaderLogo, {
             opacity: 0,
             scale: 0.9,
-            duration: 0.8,
-            delay: 0.5,
+            duration: 0.4,
+            delay: 0.1,
             ease: "power2.inOut",
-            onStart: () => {
-                // Pre-warm the hero section visibility
-                if (heroSection) {
-                    gsap.to(heroSection, { opacity: 1, duration: 1.2, ease: "power2.inOut" });
-                }
-            }
         })
             .to(loader, {
-                opacity: 0,
-                duration: 1.2,
-                ease: "power2.out",
+                yPercent: -100, // Slide the loader UP and away
+                duration: 0.8,
+                ease: "expo.inOut",
                 onStart: () => {
-                    // Trigger Hero content entrance synchronized with loader fade
+                    // Trigger Hero content entrance synchronized with loader slide
                     if (window.initHeroEntrance) {
                         window.initHeroEntrance();
                     }
-                    if (heroSection) {
-                        gsap.to(heroSection, { scale: 1, duration: 2.5, ease: "power2.out" });
-                    }
                 },
                 onComplete: () => {
-                    loader.style.display = 'none';
+                    loader.style.visibility = 'hidden';
                     ScrollTrigger.refresh();
                 }
             });
     });
+
+    // Page Transition OUT function
+    window.triggerPageTransition = function (url) {
+        if (loader.style.visibility === 'visible') return;
+
+        gsap.set(loader, { visibility: 'visible', yPercent: 100, opacity: 1, display: 'flex' });
+        gsap.set(loaderLogo, { opacity: 1, scale: 1 });
+
+        const tl = gsap.timeline({
+            onComplete: () => {
+                window.location.href = url;
+            }
+        });
+
+        tl.to(loader, {
+            yPercent: 0,
+            duration: 0.8,
+            ease: "expo.inOut"
+        });
+    };
+
+    // Internal Link Interception
+    document.addEventListener('click', (e) => {
+        if (e.defaultPrevented) return;
+
+        const link = e.target.closest('a');
+        if (!link) return;
+
+        const href = link.getAttribute('href');
+        if (!href || href.startsWith('#') || href.startsWith('javascript:') || link.target === '_blank') return;
+
+        try {
+            const url = new URL(link.href, window.location.origin);
+            const isInternal = url.origin === window.location.origin;
+            const isSamePage = url.pathname === window.location.pathname;
+
+            if (isInternal && !isSamePage && !e.metaKey && !e.ctrlKey) {
+                e.preventDefault();
+                window.triggerPageTransition(link.href);
+            }
+        } catch (err) {}
+    });
+
+    // Handle back/forward button visibility
+    window.addEventListener('pageshow', (event) => {
+        if (event.persisted) {
+            loader.style.visibility = 'hidden';
+            gsap.set(loader, { yPercent: -100 });
+        }
+    });
 }
+// ─── GLOBAL UTILITIES ───
+
+// Scroll Reveal Observer
+const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+        }
+    });
+}, { threshold: 0.1 });
+
+const initReveal = () => {
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+};
+
+// FAQ Toggle Global
+window.toggleFaq = function(element) {
+    const content = element.querySelector('.faq-content');
+    const icon = element.querySelector('.faq-icon');
+    const heading = element.querySelector('h3');
+    
+    if (!content || !icon || !heading) return;
+
+    const isOpen = !content.classList.contains('opacity-0');
+
+    // Close all other items in same parent section if needed
+    const parent = element.closest('section') || document;
+    parent.querySelectorAll('.faq-item').forEach(item => {
+        const c = item.querySelector('.faq-content');
+        const i = item.querySelector('.faq-icon');
+        const h = item.querySelector('h3');
+        if (c) {
+            c.style.maxHeight = '0';
+            c.classList.remove('opacity-100');
+            c.classList.add('opacity-0');
+        }
+        if (i) {
+            i.classList.remove('rotate-180');
+            i.textContent = '+';
+        }
+        if (h) h.classList.remove('active');
+    });
+
+    if (!isOpen) {
+        content.classList.remove('opacity-0');
+        content.classList.add('opacity-100');
+        content.style.maxHeight = content.scrollHeight + "px";
+        icon.classList.add('rotate-180');
+        icon.textContent = '-';
+        heading.classList.add('active');
+    }
+};
+
+// Re-init Reveal on DOM changes or manual call
+window.refreshReveal = initReveal;
+
+document.addEventListener('DOMContentLoaded', () => {
+    initReveal();
+});
+
+// Re-run refresh on refresh/re-render
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        ScrollTrigger.refresh();
+        initReveal();
+    }, 100);
+});
