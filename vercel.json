@@ -36,6 +36,6 @@
         "APP_PACKAGES_CACHE": "/tmp/packages.php"
     },
     "outputDirectory": ".",
-    "installCommand": "composer install --no-dev && npm install",
+    "installCommand": "npm install",
     "buildCommand": "npm run build"
 }
