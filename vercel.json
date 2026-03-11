@@ -34,5 +34,7 @@
         "APP_ROUTES_CACHE": "/tmp/routes.php",
         "APP_SERVICES_CACHE": "/tmp/services.php",
         "APP_PACKAGES_CACHE": "/tmp/packages.php"
-    }
+    },
+    "installCommand": "npm install --install-links",
+    "buildCommand": "npm run build"
 }
