@@ -1,7 +1,6 @@
 {
     "version": 2,
     "builds": [
-        { "src": "package.json", "use": "@vercel/node", "config": { "buildCommand": "npm run build" } },
         { "src": "/api/index.php", "use": "vercel-php@0.7.1", "config": { "includeFiles": "public/build/**" } },
         { "src": "/public/**", "use": "@vercel/static" }
     ],
