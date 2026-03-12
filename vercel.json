@@ -1,13 +1,14 @@
 {
     "version": 2,
+    "framework": null,
+    "installCommand": "npm install",
+    "buildCommand": "npm run build",
     "functions": {
-        "api/server.php": {
+        "api/index.php": {
             "runtime": "vercel-php@0.7.1",
             "includeFiles": "public/build/**"
         }
     },
-    "installCommand": "npm install",
-    "buildCommand": "npm run build",
     "routes": [
         {
             "src": "/build/(.*)",
@@ -27,7 +28,7 @@
         },
         {
             "src": "/(.*)",
-            "dest": "/api/server.php"
+            "dest": "/api/index.php"
         }
     ],
     "env": {
