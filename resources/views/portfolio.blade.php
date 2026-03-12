@@ -208,7 +208,7 @@
                 We craft premium amenities with a focus on quality, precision, and<br class="hidden md:block" />
                 international standards, supported by some of the strongest.
             </h2>
-            <a href="{{ url('/contact') }}" class="inline-block px-8 py-3 rounded-full border border-white text-white text-xs md:text-sm font-radley tracking-widest hover:bg-white hover:text-black transition-colors duration-300 pointer-events-auto uppercase">
+            <a href="{{ url('/contact') }}" class="inline-block px-8 py-3 rounded-full border border-white text-white text-xs md:text-sm font-manrope tracking-widest hover:bg-white hover:text-black transition-colors duration-300 pointer-events-auto uppercase">
                 Contact Us
             </a>
         </div>
