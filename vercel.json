@@ -1,18 +1,11 @@
 {
     "version": 2,
-    "builds": [
-        {
-            "src": "api/server.php",
-            "use": "vercel-php@0.7.1",
-            "config": {
-                "includeFiles": "public/build/manifest.json"
-            }
-        },
-        {
-            "src": "public/**",
-            "use": "@vercel/static"
+    "functions": {
+        "api/server.php": {
+            "runtime": "vercel-php@0.7.1",
+            "includeFiles": "public/build/**"
         }
-    ],
+    },
     "routes": [
         {
             "src": "/build/(.*)",
@@ -46,7 +39,5 @@
         "SESSION_DRIVER": "cookie",
         "CACHE_STORE": "array",
         "LOG_CHANNEL": "stderr"
-    },
-    "installCommand": "npm install",
-    "buildCommand": "npm run build"
+    }
 }
