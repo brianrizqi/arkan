@@ -1,7 +1,7 @@
 {
     "version": 2,
     "framework": null,
-    "installCommand": "npm install && run build",
+    "installCommand": "npm install",
     "buildCommand": "npm run build",
     "functions": {
         "api/server.php": {
