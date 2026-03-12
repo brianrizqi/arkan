@@ -1,9 +1,4 @@
 <?php
-
-// Check if we are running on Vercel
-if (isset($_SERVER['VERCEL_URL'])) {
-    header('X-Vercel-PHP-Executed: true');
-}
-
-// Forward Vercel requests to normal Laravel entry point
-require __DIR__ . '/../public/index.php';
+// Minimal test to verify PHP execution
+echo "PHP is executing correctly. Vercel URL: " . ($_SERVER['VERCEL_URL'] ?? 'Local');
+// require __DIR__ . '/../public/index.php'; // Temporarily commented out
