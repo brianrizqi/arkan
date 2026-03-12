@@ -1,11 +1,15 @@
 {
     "version": 2,
-    "functions": {
-        "api/index.php": {
-            "runtime": "vercel-php@0.7.1",
-            "memory": 1024
+    "builds": [
+        {
+            "src": "api/server.php",
+            "use": "vercel-php@0.7.1"
+        },
+        {
+            "src": "public/**",
+            "use": "@vercel/static"
         }
-    },
+    ],
     "routes": [
         {
             "src": "/build/(.*)",
@@ -24,11 +28,8 @@
             "dest": "/public/robots.txt"
         },
         {
-            "handle": "filesystem"
-        },
-        {
             "src": "/(.*)",
-            "dest": "/api/index.php"
+            "dest": "/api/server.php"
         }
     ],
     "env": {
