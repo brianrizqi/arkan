@@ -1,42 +1,17 @@
 {
     "version": 2,
-    "framework": null,
-    "installCommand": "npm install",
-    "buildCommand": "npm run build",
     "functions": {
-        "api/test.php": {
-            "runtime": "vercel-php@0.7.1"
-        },
-        "api/main.php": {
+        "index.php": {
             "runtime": "vercel-php@0.7.1",
             "includeFiles": "public/build/**"
         }
     },
-    "rewrites": [
-        {
-            "source": "/test-php",
-            "destination": "/api/test.php"
-        },
-        {
-            "source": "/build/(.*)",
-            "destination": "/public/build/$1"
-        },
-        {
-            "source": "/assets/(.*)",
-            "destination": "/public/assets/$1"
-        },
-        {
-            "source": "/favicon.ico",
-            "destination": "/public/favicon.ico"
-        },
-        {
-            "source": "/robots.txt",
-            "destination": "/public/robots.txt"
-        },
-        {
-            "source": "/(.*)",
-            "destination": "/api/main.php"
-        }
+    "routes": [
+        { "src": "/build/(.*)", "dest": "/public/build/$1" },
+        { "src": "/assets/(.*)", "dest": "/public/assets/$1" },
+        { "src": "/favicon.ico", "dest": "/public/favicon.ico" },
+        { "src": "/robots.txt", "dest": "/public/robots.txt" },
+        { "src": "/(.*)", "dest": "/index.php" }
     ],
     "env": {
         "APP_ENV": "production",
@@ -45,6 +20,9 @@
         "APP_ROUTES_CACHE": "/tmp/routes.php",
         "APP_SERVICES_CACHE": "/tmp/services.php",
         "APP_PACKAGES_CACHE": "/tmp/packages.php",
-        "VIEW_COMPILED_PATH": "/tmp/views"
+        "VIEW_COMPILED_PATH": "/tmp/views",
+        "SESSION_DRIVER": "cookie",
+        "CACHE_STORE": "array",
+        "LOG_CHANNEL": "stderr"
     }
 }

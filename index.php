@@ -19,4 +19,4 @@ foreach ($tmpDirs as $dir) {
 }
 
 // Forward Vercel requests to normal Laravel entry point
-require __DIR__ . '/../public/index.php';
+require __DIR__ . '/public/index.php';
