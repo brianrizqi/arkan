@@ -108,46 +108,47 @@
                         <h2 class="font-radley text-5xl md:text-6xl text-white leading-[1.05] tracking-tight">Find your<br/><span class="text-[#D2BB9C] italic">place at ARKAN.</span></h2>
                     </div>
                     <div class="flex flex-col md:items-end gap-6">
-                        <span class="font-manrope text-[11px] tracking-[0.1em] text-white/50">8 open roles</span>
+                        <span class="font-manrope text-[11px] tracking-[0.1em] text-white/50">{{ $careers->count() }} open roles</span>
                         <div class="flex flex-wrap gap-2" id="job-filters">
                             <button data-filter="all" class="filter-btn active px-5 py-2 rounded-sm border border-[#D2BB9C] bg-[#D2BB9C]/10 text-[#D2BB9C] font-manrope text-[10px] uppercase tracking-[0.2em] transition-colors hover:bg-[#D2BB9C]/20">ALL ROLES</button>
-                            <button data-filter="design" class="filter-btn px-5 py-2 rounded-sm border border-white/20 text-white/70 font-manrope text-[10px] uppercase tracking-[0.2em] transition-colors hover:bg-white/10 hover:text-white">DESIGN</button>
-                            <button data-filter="supply chain" class="filter-btn px-5 py-2 rounded-sm border border-white/20 text-white/70 font-manrope text-[10px] uppercase tracking-[0.2em] transition-colors hover:bg-white/10 hover:text-white">SUPPLY CHAIN</button>
-                            <button data-filter="business" class="filter-btn px-5 py-2 rounded-sm border border-white/20 text-white/70 font-manrope text-[10px] uppercase tracking-[0.2em] transition-colors hover:bg-white/10 hover:text-white">BUSINESS</button>
-                            <button data-filter="technology" class="filter-btn px-5 py-2 rounded-sm border border-white/20 text-white/70 font-manrope text-[10px] uppercase tracking-[0.2em] transition-colors hover:bg-white/10 hover:text-white">TECHNOLOGY</button>
+                            @foreach($categories as $category)
+                                <button data-filter="{{ $category->slug }}" class="filter-btn px-5 py-2 rounded-sm border border-white/20 text-white/70 font-manrope text-[10px] uppercase tracking-[0.2em] transition-colors hover:bg-white/10 hover:text-white">{{ $category->name }}</button>
+                            @endforeach
                         </div>
                     </div>
                 </div>
 
                 <div class="flex flex-col border-t border-white/10 job-list-container" id="job-list">
-                    @php
-                        $jobs = [
-                            ['cat' => 'Design', 'cat_slug' => 'design', 'title' => 'Senior Product Designer', 'type' => 'Full-time', 'level' => 'Senior'],
-                            ['cat' => 'Design', 'cat_slug' => 'design', 'title' => 'Hospitality Amenity Designer', 'type' => 'Full-time', 'level' => 'Mid-level'],
-                            ['cat' => 'Supply Chain', 'cat_slug' => 'supply chain', 'title' => 'Head of Procurement & Sourcing', 'type' => 'Full-time', 'level' => 'Leadership'],
-                            ['cat' => 'Supply Chain', 'cat_slug' => 'supply chain', 'title' => 'Logistics Coordinator', 'type' => 'Full-time', 'level' => 'Mid-level'],
-                            ['cat' => 'Supply Chain', 'cat_slug' => 'supply chain', 'title' => 'Quality Assurance Manager', 'type' => 'Full-time', 'level' => 'Senior'],
-                            ['cat' => 'Business Development', 'cat_slug' => 'business', 'title' => 'Senior Account Manager — Hospitality', 'type' => 'Full-time', 'level' => 'Senior'],
-                            ['cat' => 'Technology', 'cat_slug' => 'technology', 'title' => 'Full Stack Developer — Platform', 'type' => 'Full-time', 'level' => 'Mid-level'],
-                            ['cat' => 'Business', 'cat_slug' => 'business', 'title' => 'Project Manager — Pre-Opening Programs', 'type' => 'Full-time', 'level' => 'Mid-level'],
-                        ];
-                    @endphp
-                    @foreach($jobs as $index => $j)
-                    <a href="{{ url('/careers-detail') }}" data-category="{{ $j['cat_slug'] }}" class="job-item group flex flex-col md:flex-row md:items-center justify-between py-8 md:py-10 border-b border-white/10 hover:bg-white/5 transition-colors px-4 -mx-4 reveal reveal-delay-{{ ($index % 3) + 1 }}">
-                        <div class="flex flex-col md:w-1/2 mb-4 md:mb-0">
-                            <span class="font-manrope text-[9px] tracking-[0.25em] text-[#D2BB9C] uppercase mb-2">{{ $j['cat'] }}</span>
-                            <h3 class="font-radley text-2xl md:text-[28px] text-white mb-3 group-hover:text-[#D2BB9C] transition-colors">@php echo str_replace('Designer', '<span class="italic">Designer</span>', str_replace('Manager', '<span class="italic">Manager</span>', str_replace('Developer', '<span class="italic">Developer</span>', str_replace('Procurement', '<span class="italic">Procurement</span>', $j['title'])))) @endphp</h3>
+                    @forelse($careers as $index => $j)
+                    <div data-category="{{ $j->category->slug ?? '' }}" class="job-item group flex flex-col md:flex-row md:items-center justify-between py-8 md:py-10 border-b border-white/10 hover:bg-white/5 transition-colors px-4 -mx-4 reveal reveal-delay-{{ ($index % 3) + 1 }}">
+                        <a href="{{ url('/careers/' . $j->slug) }}" class="flex flex-col md:w-1/2 mb-4 md:mb-0">
+                            <span class="font-manrope text-[10px] tracking-[0.2em] text-[#D2BB9C] uppercase mb-4 block">{{ $j->category->name ?? 'CAREERS' }}</span>
+                            <h3 class="font-radley text-2xl text-white mb-3 group-hover:text-[#D2BB9C] transition-colors">@php echo str_replace(['Designer', 'Manager', 'Developer', 'Procurement'], ['<span class="italic">Designer</span>', '<span class="italic">Manager</span>', '<span class="italic">Developer</span>', '<span class="italic">Procurement</span>'], $j->title) @endphp</h3>
                             <div class="flex gap-2">
-                                <span class="px-3 py-1 rounded-[2px] border border-white/20 text-white/70 font-manrope text-[9px] uppercase tracking-wider">{{ $j['type'] }}</span>
-                                <span class="px-3 py-1 rounded-[2px] border border-white/20 text-white/70 font-manrope text-[9px] uppercase tracking-wider">{{ $j['level'] }}</span>
+                                <span class="px-3 py-1 rounded-[2px] border border-white/20 text-white/70 font-manrope text-[9px] uppercase tracking-wider">{{ $j->type }}</span>
+                                <span class="px-3 py-1 rounded-[2px] border border-white/20 text-white/70 font-manrope text-[9px] uppercase tracking-wider">{{ $j->level }}</span>
+                            </div>
+                        </a>
+                        <div class="flex items-center justify-between md:justify-end md:w-1/2 gap-8 text-white/50 font-manrope text-xs">
+                            <span class="">{{ $j->location }}</span>
+                            <div class="flex items-center gap-4">
+                                <button type="button" 
+                                    data-id="{{ $j->id }}"
+                                    data-title='{!! str_replace(["Designer", "Manager", "Developer", "Procurement"], ["<span class=\"italic\">Designer</span>", "<span class=\"italic\">Manager</span>", "<span class=\"italic\">Developer</span>", "<span class=\"italic\">Procurement</span>"], $j->title) !!}'
+                                    data-category="{{ $j->category->name ?? 'CAREERS' }}"
+                                    class="apply-btn-trigger px-6 py-2 bg-[#D2BB9C] text-[#1B1B18] font-manrope text-[9px] uppercase tracking-[0.2em] font-semibold rounded-[2px] opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-4 group-hover:translate-x-0 hidden md:block">
+                                    APPLY NOW
+                                </button>
+                                <span class="group-hover:translate-x-2 group-hover:text-white transition-all duration-300">→</span>
                             </div>
                         </div>
-                        <div class="flex items-center justify-between md:justify-end md:w-1/2 gap-8 text-white/50 font-manrope text-xs">
-                            <span>Riyadh, KSA</span>
-                            <span class="group-hover:translate-x-2 group-hover:text-white transition-all duration-300">→</span>
-                        </div>
-                    </a>
-                    @endforeach
+                    </div>
+                    @empty
+                    <div class="py-20 text-center">
+                        <p class="font-radley text-2xl text-white/50 italic">No open positions at the moment.</p>
+                        <p class="font-manrope text-xs text-white/30 uppercase tracking-[0.2em] mt-4">Check back soon or send us a speculative application below.</p>
+                    </div>
+                    @endforelse
                 </div>
             </div>
         </section>
@@ -161,34 +162,47 @@
                         <h2 class="font-radley text-5xl md:text-6xl text-[#4A433A] leading-[1.05] tracking-tight mb-8">Don't see your<br/>role? <span class="text-[#C4A882] italic">Write to us.</span></h2>
                         <p class="font-manrope text-[13px] text-[#8a8174] leading-[1.8] font-medium max-w-md mb-8">ARKAN is always on the lookout for exceptional people — even when there is no open listing that matches your profile exactly.<br/><br/><strong class="text-[#4A433A]">Send us your CV and tell us who you are.</strong> If there is a place for you at ARKAN, we will find it.</p>
                         
-                        <form class="space-y-6 max-w-lg mt-4 reveal" onsubmit="event.preventDefault()">
+                        <form class="space-y-6 max-w-[640px] mt-4 reveal relative" id="speculative-apply-form" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <!-- Premium Loading Overlay -->
+                            <div id="speculative-loading-overlay" class="absolute inset-0 z-50 bg-[#EAE2D2]/95 flex flex-col items-center justify-center opacity-0 pointer-events-none transition-all duration-500">
+                                <div class="relative w-16 h-16 mb-6 font-cinzel text-[9px] tracking-[0.3em] font-bold text-[#4A433A] flex items-center justify-center">
+                                    <div class="absolute inset-0 border border-[#D2BB9C]/30 rounded-full animate-ping"></div>
+                                    <div class="absolute inset-2 border border-[#C19A6B]/50 rounded-full animate-spin [animation-duration:3s]"></div>
+                                    ARKAN
+                                </div>
+                                <p class="font-manrope text-[9px] uppercase tracking-[0.3em] text-[#8a8174] animate-pulse">Processing</p>
+                            </div>
+
                             <div class="flex flex-col md:flex-row gap-6">
                                 <div class="flex flex-col w-full">
                                     <label class="font-manrope text-[9px] uppercase tracking-[0.2em] text-[#8a8174] font-semibold mb-2">First Name</label>
-                                    <input type="text" placeholder="John" class="w-full bg-[#FCFAF8] border border-[#D2BB9C]/30 px-4 py-3 placeholder:text-[#8a8174]/40 text-[#4A433A] font-manrope text-sm focus:outline-none focus:border-[#C4A882] transition-colors rounded-sm" />
+                                    <input type="text" name="first_name" placeholder="John" required class="w-full bg-[#FCFAF8] border border-[#D2BB9C]/30 px-4 py-3 placeholder:text-[#8a8174]/40 text-[#4A433A] font-manrope text-sm focus:outline-none focus:border-[#C4A882] transition-colors rounded-sm" />
                                 </div>
                                 <div class="flex flex-col w-full">
                                     <label class="font-manrope text-[9px] uppercase tracking-[0.2em] text-[#8a8174] font-semibold mb-2">Last Name</label>
-                                    <input type="text" placeholder="Doe" class="w-full bg-[#FCFAF8] border border-[#D2BB9C]/30 px-4 py-3 placeholder:text-[#8a8174]/40 text-[#4A433A] font-manrope text-sm focus:outline-none focus:border-[#C4A882] transition-colors rounded-sm" />
+                                    <input type="text" name="last_name" placeholder="Doe" required class="w-full bg-[#FCFAF8] border border-[#D2BB9C]/30 px-4 py-3 placeholder:text-[#8a8174]/40 text-[#4A433A] font-manrope text-sm focus:outline-none focus:border-[#C4A882] transition-colors rounded-sm" />
                                 </div>
                             </div>
                             <div class="flex flex-col">
                                 <label class="font-manrope text-[9px] uppercase tracking-[0.2em] text-[#8a8174] font-semibold mb-2">Email Address</label>
-                                <input type="email" placeholder="your@email.com" class="w-full bg-[#FCFAF8] border border-[#D2BB9C]/30 px-4 py-3 placeholder:text-[#8a8174]/40 text-[#4A433A] font-manrope text-sm focus:outline-none focus:border-[#C4A882] transition-colors rounded-sm" />
+                                <input type="email" name="email" placeholder="your@email.com" required class="w-full bg-[#FCFAF8] border border-[#D2BB9C]/30 px-4 py-3 placeholder:text-[#8a8174]/40 text-[#4A433A] font-manrope text-sm focus:outline-none focus:border-[#C4A882] transition-colors rounded-sm" />
                             </div>
                             <div class="flex flex-col md:flex-row gap-6">
                                 <div class="flex flex-col w-full">
                                     <label class="font-manrope text-[9px] uppercase tracking-[0.2em] text-[#8a8174] font-semibold mb-2">Phone</label>
-                                    <input type="tel" placeholder="+966 5X XXX XXXX" class="w-full bg-[#FCFAF8] border border-[#D2BB9C]/30 px-4 py-3 placeholder:text-[#8a8174]/40 text-[#4A433A] font-manrope text-sm focus:outline-none focus:border-[#C4A882] transition-colors rounded-sm" />
+                                    <input type="tel" name="phone" placeholder="+966 5X XXX XXXX" class="w-full bg-[#FCFAF8] border border-[#D2BB9C]/30 px-4 py-3 placeholder:text-[#8a8174]/40 text-[#4A433A] font-manrope text-sm focus:outline-none focus:border-[#C4A882] transition-colors rounded-sm" />
                                 </div>
                                 <div class="flex flex-col w-full relative">
                                     <label class="font-manrope text-[9px] uppercase tracking-[0.2em] text-[#8a8174] font-semibold mb-2">Area of Interest</label>
-                                    <select class="w-full bg-[#FCFAF8] border border-[#D2BB9C]/30 px-4 py-3 text-[#4A433A] font-manrope text-sm focus:outline-none focus:border-[#C4A882] transition-colors rounded-sm appearance-none cursor-pointer">
-                                        <option value="" disabled selected>Type department</option>
-                                        <option value="design">Design</option>
-                                        <option value="supply-chain">Supply Chain</option>
-                                        <option value="business">Business</option>
-                                        <option value="technology">Technology</option>
+                                    <select name="career_id" class="w-full bg-[#FCFAF8] border border-[#D2BB9C]/30 px-4 py-3 text-[#4A433A] font-manrope text-sm focus:outline-none focus:border-[#C4A882] transition-colors rounded-sm appearance-none cursor-pointer">
+                                        <option value="" selected>General Speculative</option>
+                                        @foreach($categories as $category)
+                                            <option value="" disabled class="font-bold bg-[#D2BB9C]/10">— {{ $category->name }} —</option>
+                                            @foreach($careers->where('career_category_id', $category->id) as $c)
+                                                <option value="{{ $c->id }}">{{ $c->title }}</option>
+                                            @endforeach
+                                        @endforeach
                                     </select>
                                     <div class="absolute right-4 bottom-4 pointer-events-none text-[#8a8174]">
                                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
@@ -197,18 +211,34 @@
                             </div>
                             <div class="flex flex-col">
                                 <label class="font-manrope text-[9px] uppercase tracking-[0.2em] text-[#8a8174] font-semibold mb-2">Cover Note</label>
-                                <textarea rows="4" placeholder="Tell us briefly who you are and what you bring to ARKAN..." class="w-full bg-[#FCFAF8] border border-[#D2BB9C]/30 px-4 py-3 placeholder:text-[#8a8174]/40 text-[#4A433A] font-manrope text-sm focus:outline-none focus:border-[#C4A882] transition-colors rounded-sm resize-none"></textarea>
+                                <textarea name="cover_letter" rows="4" placeholder="Tell us briefly who you are and what you bring to ARKAN..." class="w-full bg-[#FCFAF8] border border-[#D2BB9C]/30 px-4 py-3 placeholder:text-[#8a8174]/40 text-[#4A433A] font-manrope text-sm focus:outline-none focus:border-[#C4A882] transition-colors rounded-sm resize-none"></textarea>
                             </div>
                             <div class="flex flex-col">
                                 <label class="font-manrope text-[9px] uppercase tracking-[0.2em] text-[#8a8174] font-semibold mb-2">Upload CV (PDF or DOCX)</label>
                                 <div class="w-full bg-[#FCFAF8] border border-dashed border-[#D2BB9C]/50 px-4 py-4 flex items-center justify-between text-[#8a8174]/60 font-manrope text-[11px] rounded-sm cursor-pointer hover:bg-white transition-colors relative">
-                                    <span>Choose file or drag & drop</span>
+                                    <span id="speculative-cv-filename">Choose file or drag & drop</span>
                                     <span>↑</span>
-                                    <input type="file" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept=".pdf,.doc,.docx" />
+                                    <input type="file" name="cv" id="speculative-cv-upload" required class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept=".pdf,.doc,.docx" />
                                 </div>
                             </div>
-                            <button type="submit" class="w-full py-4 bg-[#236b8e] hover:bg-[#1c5571] text-white font-manrope text-[9px] uppercase tracking-[0.2em] font-semibold transition-colors rounded-sm mt-4">SUBMIT APPLICATION</button>
-                            <p class="text-[9px] text-[#8a8174]/60 text-center font-manrope">By submitting, you consent to ARKAN storing your information for recruitment purposes.</p>
+
+                            <div class="flex flex-col">
+                                <label class="font-manrope text-[9px] uppercase tracking-[0.2em] text-[#8a8174] font-semibold mb-2">Security Verification</label>
+                                <div class="flex items-center gap-4 bg-[#FCFAF8] px-4 py-3 rounded-sm border border-[#D2BB9C]/30">
+                                    <span id="speculative-captcha-question" class="font-manrope text-sm text-[#4A433A] min-w-[60px]">Loading...</span>
+                                    <input type="number" name="captcha_answer" id="speculative-captcha-answer" placeholder="?" required
+                                        class="flex-1 bg-transparent text-[#4A433A] font-manrope text-sm focus:outline-none placeholder:text-[#8a8174]/40" />
+                                    <button type="button" id="refresh-speculative-captcha" class="text-[#D2BB9C] hover:text-[#4A433A] transition-colors p-1" title="Refresh Challenge">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <button type="submit" id="speculative-submit-btn" class="w-full py-4 bg-[#236b8e] hover:bg-[#1c5571] text-white font-manrope text-[9px] uppercase tracking-[0.2em] font-semibold transition-colors rounded-sm mt-4 disabled:opacity-50">SUBMIT APPLICATION</button>
+                            <div id="speculative-form-message" class="hidden mt-4 text-[11px] text-center font-manrope uppercase tracking-wider"></div>
+                            <p class="text-[9px] text-[#8a8174]/60 text-center font-manrope mt-4">By submitting, you consent to ARKAN storing your information for recruitment purposes.</p>
                         </form>
                     </div>
                     <div class="w-full lg:w-1/2 flex justify-center lg:justify-end reveal reveal-delay-3">
@@ -238,6 +268,9 @@
         </section>
     </main>
 </div>
+
+@include('partials.modal')
+
 @endsection
 
 @push('scripts')
@@ -246,7 +279,7 @@
     window.scrollTo(0, 0);
 
     document.addEventListener('DOMContentLoaded', () => {
-        // Job filter logic using global styles if possible, otherwise localized
+        // Job filter logic
         const filterBtns = document.querySelectorAll('.filter-btn');
         const jobItems = document.querySelectorAll('.job-item');
 
@@ -281,6 +314,94 @@
                 });
             });
         });
+
+        // Speculative Application Form Logic
+        const specForm = document.getElementById('speculative-apply-form');
+        const specSubmitBtn = document.getElementById('speculative-submit-btn');
+        const specFormMessage = document.getElementById('speculative-form-message');
+        const specLoadingOverlay = document.getElementById('speculative-loading-overlay');
+        const specCvUpload = document.getElementById('speculative-cv-upload');
+        const specCvFilename = document.getElementById('speculative-cv-filename');
+        const specCaptchaQuestion = document.getElementById('speculative-captcha-question');
+        const specCaptchaInput = document.getElementById('speculative-captcha-answer');
+        const specRefreshCaptcha = document.getElementById('refresh-speculative-captcha');
+
+        async function fetchSpeculativeCaptcha() {
+            try {
+                specCaptchaQuestion.textContent = '...';
+                const response = await fetch('/captcha/get');
+                const data = await response.json();
+                specCaptchaQuestion.textContent = data.question;
+                specCaptchaInput.value = '';
+            } catch (err) {
+                specCaptchaQuestion.textContent = 'Error';
+            }
+        }
+
+        if (specRefreshCaptcha) specRefreshCaptcha.addEventListener('click', fetchSpeculativeCaptcha);
+        fetchSpeculativeCaptcha(); // Initial load
+
+        if (specCvUpload) {
+            specCvUpload.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) specCvFilename.textContent = e.target.files[0].name;
+            });
+        }
+
+        if (specForm) {
+            specForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                specSubmitBtn.disabled = true;
+                specFormMessage.classList.add('hidden');
+
+                if (window.gsap) {
+                    gsap.to(specLoadingOverlay, { display: 'flex', opacity: 1, duration: 0.5, pointerEvents: 'auto' });
+                }
+
+                const formData = new FormData(specForm);
+
+                try {
+                    const response = await fetch('/careers/apply', {
+                        method: 'POST',
+                        body: formData,
+                        headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok && result.success) {
+                        if (window.gsap) {
+                            gsap.to(specLoadingOverlay.querySelector('p'), { text: 'Submitted Successfully', color: '#16a34a', duration: 0.3 });
+                        }
+                        specFormMessage.textContent = 'Thank you! We have received your speculative application.';
+                        specFormMessage.classList.add('text-green-600');
+                        specFormMessage.classList.remove('hidden');
+                        specForm.reset();
+                        specCvFilename.textContent = 'Choose file or drag & drop';
+                        
+                        setTimeout(() => {
+                            if (window.gsap) gsap.to(specLoadingOverlay, { opacity: 0, duration: 0.5, display: 'none', pointerEvents: 'none' });
+                            specFormMessage.classList.add('hidden');
+                            fetchSpeculativeCaptcha();
+                        }, 3000);
+                    } else {
+                        if (window.gsap) gsap.to(specLoadingOverlay, { opacity: 0, duration: 0.3, display: 'none', pointerEvents: 'none' });
+                        specFormMessage.textContent = result.message || 'Validation failed.';
+                        if (result.errors) specFormMessage.textContent = Object.values(result.errors)[0][0];
+                        specFormMessage.classList.add('text-red-600', 'mt-4');
+                        specFormMessage.classList.remove('hidden');
+                        fetchSpeculativeCaptcha();
+                    }
+                } catch (error) {
+                    if (window.gsap) gsap.to(specLoadingOverlay, { opacity: 0, duration: 0.3, display: 'none', pointerEvents: 'none' });
+                    specFormMessage.textContent = 'An error occurred. Please try again.';
+                    specFormMessage.classList.add('text-red-600', 'mt-4');
+                    specFormMessage.classList.remove('hidden');
+                    fetchSpeculativeCaptcha();
+                } finally {
+                    specSubmitBtn.disabled = false;
+                }
+            });
+        }
     });
 </script>
 @endpush

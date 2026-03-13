@@ -170,32 +170,23 @@
     <!-- Portfolio Grid Section -->
     <section class="max-w-[1920px] mx-auto px-4 md:px-8 lg:px-16 xl:px-24 pb-16 md:pb-24">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            <!-- Project items - In a real app these would be dynamic -->
-            @php
-                $portfolioItems = [
-                    ['img' => 'about-1.png', 'cat' => 'Hospitality Manufacturing', 'title' => 'The Art of Precision in Luxury Hospitality Production'],
-                    ['img' => 'about-bg-2.png', 'cat' => 'Design Excellence', 'title' => 'Crafting bespoke architectural details'],
-                    ['img' => 'about-3.png', 'cat' => 'Material Innovation', 'title' => 'Refined textures for premium interiors'],
-                    ['img' => 'about-4.png', 'cat' => 'Global Standards', 'title' => 'International quality, local soul'],
-                    ['img' => 'about-5.png', 'cat' => 'Curation', 'title' => 'Bespoke amenity kits for elite travel'],
-                    ['img' => 'about-6.png', 'cat' => 'Wellness', 'title' => 'Soothing scents and organic care'],
-                    ['img' => 'about-7.png', 'cat' => 'Atmosphere', 'title' => 'Elevating guest experiences with aroma'],
-                    ['img' => 'about-8.png', 'cat' => 'Hospitality OS&E', 'title' => 'Complete solutions from design to site'],
-                    ['img' => 'our-jurnal-1.png', 'cat' => 'Legacy', 'title' => 'Establishing the ARKAN standard'],
-                ];
-            @endphp
-
-            @foreach($portfolioItems as $item)
+            @forelse($portfolios as $portfolio)
             <div class="portfolio-item opacity-0 group cursor-pointer overflow-hidden relative">
                 <div class="aspect-square overflow-hidden">
-                    <img src="{{ asset('assets/img/' . $item['img']) }}" alt="{{ $item['title'] }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                    <img src="{{ asset('storage/' . $portfolio->image) }}" alt="{{ $portfolio->title }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                 </div>
                 <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-center p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                    <span class="text-[10px] md:text-xs font-sans font-bold tracking-[0.3em] text-white/70 uppercase mb-2">{{ $item['cat'] }}</span>
-                    <h3 class="text-lg md:text-2xl font-radley text-white uppercase leading-tight">{{ $item['title'] }}</h3>
+                    <span class="text-[10px] md:text-xs font-sans font-bold tracking-[0.3em] text-white/70 uppercase mb-2">{{ $portfolio->category }}</span>
+                    <h3 class="text-lg md:text-2xl font-radley text-white uppercase leading-tight">{{ $portfolio->title }}</h3>
                 </div>
             </div>
-            @endforeach
+            @empty
+            <div class="portfolio-item opacity-100 group overflow-hidden relative border border-dashed border-[#E5E0D8]">
+                <div class="aspect-square bg-[#E2D9C8]/10 flex flex-col items-center justify-center text-center p-6 transition-all duration-500">
+                    <h3 class="text-xl md:text-3xl font-radley text-[#1B1B18] uppercase leading-tight font-light">ARKAN PORTFOLIO</h3>
+                </div>
+            </div>
+            @endforelse
         </div>
     </section>
 

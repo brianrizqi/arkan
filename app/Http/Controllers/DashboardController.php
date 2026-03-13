@@ -9,6 +9,7 @@ class DashboardController extends Controller
 
     public function index()
     {
-        return view('dashboard');
+        $recent_applications = \App\Models\CareerApplication::with('career')->latest()->take(5)->get();
+        return view('dashboard', compact('recent_applications'));
     }
 }

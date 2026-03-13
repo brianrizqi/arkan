@@ -13,6 +13,8 @@
         <!-- Styles / Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+
+
         @stack('styles')
     </head>
     <body class="antialiased font-sans {{ $bodyClass ?? '' }}">
@@ -22,8 +24,13 @@
         $navbarEntrance = $navbarEntrance ?? true;
     @endphp
     
-    @include('partials.loader')
-    @include('partials.navbar', ['navbarTheme' => $navbarTheme, 'navDark' => $navDark, 'navbarEntrance' => $navbarEntrance])
+    @unless($noLoader ?? false)
+        @include('partials.loader')
+    @endunless
+
+    @unless($noNavbar ?? false)
+        @include('partials.navbar', ['navbarTheme' => $navbarTheme, 'navDark' => $navDark, 'navbarEntrance' => $navbarEntrance])
+    @endunless
 
     @yield('content')
     

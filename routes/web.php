@@ -15,12 +15,17 @@ Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logou
 // Authenticated Routes
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
+    Route::resource('admin/portfolio', App\Http\Controllers\Admin\PortfolioController::class)->names('portfolio');
+    Route::resource('admin/career', App\Http\Controllers\Admin\CareerController::class)->names('career');
+    Route::resource('admin/career-category', App\Http\Controllers\Admin\CareerCategoryController::class)->names('career-category');
+    Route::resource('admin/career-application', App\Http\Controllers\Admin\CareerApplicationController::class)->names('career-application');
 });
 
 
 
 Route::get('/', function () {
-    return view('home');
+    $portfolios = App\Models\Portfolio::latest()->get();
+    return view('home', compact('portfolios'));
 });
 
 Route::get('/about', function () {
@@ -36,7 +41,8 @@ Route::get('/journal', function () {
 });
 
 Route::get('/portfolio', function () {
-    return view('portfolio');
+    $portfolios = App\Models\Portfolio::latest()->get();
+    return view('portfolio', compact('portfolios'));
 });
 
 Route::get('/journal-detail', function () {
@@ -52,12 +58,19 @@ Route::get('/sustainability', function () {
 });
 
 Route::get('/careers', function () {
-    return view('careers');
+    $careers = App\Models\Career::with('category')->latest()->get();
+    $categories = App\Models\CareerCategory::whereHas('careers')->get();
+    return view('careers', compact('careers', 'categories'));
 });
 
-Route::get('/careers-detail', function () {
-    return view('careers-detail');
+Route::get('/careers/{slug}', function ($slug) {
+    $career = App\Models\Career::where('slug', $slug)->firstOrFail();
+    $more_roles = App\Models\Career::where('id', '!=', $career->id)->latest()->take(3)->get();
+    return view('careers-detail', compact('career', 'more_roles'));
 });
+
+Route::post('/careers/apply', [App\Http\Controllers\CareerApplicationController::class, 'store'])->name('careers.apply');
+Route::get('/captcha/get', [App\Http\Controllers\CareerApplicationController::class, 'getCaptcha'])->name('captcha.get');
 
 Route::get('/help-support', function () {
     return view('help-support');
